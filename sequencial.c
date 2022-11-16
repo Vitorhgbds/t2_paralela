@@ -55,6 +55,7 @@ int main(int argc, char** argv) {
   MPI_Comm_rank(MPI_COMM_WORLD, &id);
   MPI_Comm_size(MPI_COMM_WORLD, &n);
   if (id == 0) {
+    // começa definição
      /* Gera os coeficientes do polinomio */
      #pragma omp parallel for
      for (i=0; i<=GRAU; ++i)
@@ -65,7 +66,10 @@ int main(int argc, char** argv) {
          x[i] = 0.1+0.1*(double)i/TAM_MAX;
          gabarito[i] = polinomio(a, GRAU, x[i]);
      }
+     // fim definição -> chamar cast
+     // mpi cast recebe todos os X
      /* Gera tabela com tamanhos e tempos */ 
+     // utilizar broadcast para que todos recebam o mesmo x
      for (size = TAM_INI; size <= TAM_MAX; size+= TAM_INC) {
          /* Calcula */
          tempo = -MPI_Wtime();
