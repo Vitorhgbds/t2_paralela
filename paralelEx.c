@@ -70,7 +70,7 @@ int main(int argc, char **argv)
         {
             int p = 0;
             printf("process: %d - waiting response og %d.. \n", pid, i);
-            MPI_Recv(&p, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &status)
+            MPI_Recv(&p, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &status);
             printf("process: %d - Receive response of %d = %d.. \n", pid, i, p);
         }
         
@@ -83,7 +83,7 @@ int main(int argc, char **argv)
         printf("process: %d - of node: %s.. exiting barirer.\n", pid, hostname);
         MPI_Bcast(process_alfa, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         printf("process: %d - of node: %s.. receiving alfas...\n", pid, hostname);
-        MPI_Send(&pid, 1, MPI_INT, 0, 0, MPI_COMM_WORLD)
+        MPI_Send(&pid, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
     }
     MPI_Finalize();
     return 0;
