@@ -94,10 +94,10 @@ int main(int argc, char **argv)
         int arr_node[5];
         MPI_Recv(arr_node, 5, MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
         char charArr[6];
-        charArr[5] = '\0'
+        charArr[5] = '\0';
         for (int i = 0; i < 5; i++)
         {
-            charArr[i] = arr_node[i] + '0'
+            charArr[i] = arr_node[i] + '0';
         }
         
         printf("process: %d - of node: %s.. Received Array: %s\n", pid, hostname, charArr);
