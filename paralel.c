@@ -91,12 +91,14 @@ int main(int argc, char **argv)
                 double arrToSend[tam];
                 for (int i = 0; i < tam; i++)
                 {
-                    arrToSend[i] = x[i + ini];
+                    arrToSend[i] = x[i + init];
                 }
 
+                printf("process: %d - of node: %s.. sending size of: %d to worker: %d...\n", pid, hostname, tam, pid);
                 MPI_Send(&tam, 1, MPI_INT, pid, TAG_SEND_SIZE, MPI_COMM_WORLD);
+                printf("process: %d - of node: %s.. Senfing array to worker: %d ...\n", pid, hostname, pid);
                 MPI_Send(arrToSend, tam, MPI_DOUBLE, pid, TAG_SEND_ARR, MPI_COMM_WORLD);
-                ini = fim;
+                init = fim;
             }
 
             for (int pid = 1; pid < process_count; i++)
@@ -105,6 +107,7 @@ int main(int argc, char **argv)
                 int tam = fim - receivedInit;
                 int recv[tam];
                 MPI_Recv(recv, tam, MPI_DOUBLE, pid, TAG_SEND_ARR, MPI_COMM_WORLD, &status);
+                printf("process: %d - of node: %s.. Receving partial array from worker: %d ...\n", pid, hostname, pid);
                 for (int i = 0; i < tam; i++)
                 {
                     y[i + receivedInit] = recv[i];
@@ -136,8 +139,10 @@ int main(int argc, char **argv)
         int size = 1;
         int elements_size;
         MPI_Recv(&elements_size, 1, MPI_INT, 0, TAG_SEND_SIZE, MPI_COMM_WORLD, &status);
+        printf("process: %d - of node: %s.. receiver array size of: %d ...\n", pid, hostname, elements_size);
         double processArray[elements_size];
         MPI_Recv(processArray, elements_size, MPI_DOUBLE, 0, TAG_SEND_ARR, MPI_COMM_WORLD, &status);
+        printf("process: %d - of node: %s.. receiver array ...\n", pid, hostname);
        	double answer[elements_size];
         for (int i = 0; i < elements_size; i++)
         {
