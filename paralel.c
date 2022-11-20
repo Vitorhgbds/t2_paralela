@@ -113,8 +113,9 @@ int main(int argc, char **argv)
                 int fim = pid * size / (process_count - 1);
                 int tam = fim - receivedInit;
                 int recv[tam];
+                printf("process: %d - of node: %s.. Waiting response of worker %d...\n", MAIN_PID, hostname, pid);
                 MPI_Recv(recv, tam, MPI_DOUBLE, pid, TAG_SEND_ARR, MPI_COMM_WORLD, &status);
-                printf("process: %d - of node: %s.. RECEIVING CHUNK OF SIZE %d, startIndex: %d, endIndex: %d for pid: %d -> sizeof recv %d...\n", MAIN_PID, hostname, tam, receivedInit, fim, pid, sizeof(recv));
+                printf("process: %d - of node: %s.. RECEIVING CHUNK OF SIZE %d, startIndex: %d, endIndex: %d for pid: %d -> sizeof recv %ld...\n", MAIN_PID, hostname, tam, receivedInit, fim, pid, sizeof(recv));
                 for (int i = 0; i < tam; i++)
                 {
                     y[i + receivedInit] = recv[i];
@@ -171,6 +172,7 @@ int main(int argc, char **argv)
             {
                 answer[i] = polinomio(process_alfa, GRAU, processArray[i]);
             }
+            printf("process: %d - of node: %s.. sending array with answers...\n", MAIN_PID, hostname);
             MPI_Send(answer, elements_size, MPI_DOUBLE, 0, TAG_SEND_ARR, MPI_COMM_WORLD);
         }
     }
