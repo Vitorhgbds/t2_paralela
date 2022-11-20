@@ -10,9 +10,9 @@
 
 ################ Change these parameters according to your requisites
 # nodes and tasks
-#SBATCH --ntasks 1
-#SBATCH --nodes 1
-##SBATCH --ntasks-per-node=16
+#SBATCH --ntasks 32
+#SBATCH --nodes 2
+#SBATCH --ntasks-per-node=16
 
 # time 
 #SBATCH -t 10
@@ -76,8 +76,8 @@ echo ################
 
 ############# Commands...
 
-echo "Single node"
-mpirun ./paralEx > ./paralelx.output
+echo "Ex"
+mpirun --map-by node -n 32 ./paralEx > ./paralelx.output
 echo
 ################
 

@@ -54,6 +54,7 @@ int main(int argc, char **argv)
     MPI_Get_processor_name(hostname, &hostsize);
     MPI_Comm_rank(MPI_COMM_WORLD, &pid);
     MPI_Comm_size(MPI_COMM_WORLD, &process_count);
+    printf("Number of processesss: host: %d - %s\n", process_count, hostname);
     if (pid == 0)
     {
         /* Gera os coeficientes do polinomio */
@@ -65,6 +66,14 @@ int main(int argc, char **argv)
         MPI_Bcast(a, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         /* Preenche vetores */
         printf("process: %d - of node: %s.. SendedAlfas...\n", pid, hostname);
+        for (int i = 1; i < process_count; i++)
+        {
+            int p = 0;
+            printf("process: %d - waiting response og %d.. \n", pid, i);
+            MPI_Recv(&p, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &status)
+            printf("process: %d - Receive response of %d = %d.. \n", pid, i, p);
+        }
+        
     }
     else
     {
@@ -73,7 +82,8 @@ int main(int argc, char **argv)
         MPI_Barrier(MPI_COMM_WORLD);
         printf("process: %d - of node: %s.. exiting barirer.\n", pid, hostname);
         MPI_Bcast(process_alfa, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-        printf("process: %d - of node: %s.. receiving alfas...\n", pid, hostname);        
+        printf("process: %d - of node: %s.. receiving alfas...\n", pid, hostname);
+        MPI_Send(&pid, 1, MPI_INT, 0, 0, MPI_COMM_WORLD)
     }
     MPI_Finalize();
     return 0;
