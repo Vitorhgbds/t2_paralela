@@ -74,6 +74,9 @@ int main(int argc, char **argv)
             printf("process: %d - waiting response og %d.. \n", pid, i);
             MPI_Recv(&p, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &status);
             printf("process: %d - Receive response of %d = %d.. \n", pid, i, p);
+            int arr[5] = {1,2,3,4,5};
+            printf("process: %d - sending ARR to %d.. \n", pid, i);
+            MPI_Send(arr, 5, MPI_INT, i, 1, MPI_COMM_WORLD);
         }
         
     }
@@ -88,6 +91,16 @@ int main(int argc, char **argv)
         MPI_Barrier(MPI_COMM_WORLD);
         printf("process: %d - of node: %s.. exiting barirer.\n", pid, hostname);
         MPI_Send(&pid, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+        int arr_node[5];
+        MPI_Recv(arr_node, 5, MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
+        char charArr[6];
+        charArr[5] = '\0'
+        for (int i = 0; i < 5; i++)
+        {
+            charArr[i] = arr_node[i] + '0'
+        }
+        
+        printf("process: %d - of node: %s.. Received Array: %s\n", pid, hostname, charArr);
     }
     MPI_Finalize();
     return 0;
