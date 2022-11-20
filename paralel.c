@@ -62,7 +62,7 @@ int main(int argc, char **argv)
             a[i] = (i % 3 == 0) ? -1.0 : 1.0;
         MPI_Barrier(MPI_COMM_WORLD);
         printf("process: %d - of node: %s.. sending Alfas...\n", pid, hostname);
-        MPI_Bcast(a, GRAU + 1, MPI_INT, 0, MPI_COMM_WORLD);
+        MPI_Bcast(a, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         /* Preenche vetores */
         printf("process: %d - of node: %s.. GENERATING VALIDATION...\n", pid, hostname);
 #pragma omp parallel for
@@ -129,11 +129,11 @@ int main(int argc, char **argv)
     }
     else
     {
-        int process_alfa[GRAU + 1];
+        double process_alfa[GRAU + 1];
         printf("Starting process: %d - of node: %s.. waiting on barirer.\n", pid, hostname);
         MPI_Barrier(MPI_COMM_WORLD);
         printf("process: %d - of node: %s.. exiting barirer.\n", pid, hostname);
-        MPI_Bcast(process_alfa, GRAU + 1, MPI_INT, 0, MPI_COMM_WORLD);
+        MPI_Bcast(process_alfa, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         printf("process: %d - of node: %s.. receiving alfas...\n", pid, hostname);
         MPI_Barrier(MPI_COMM_WORLD);
         int size = 1;
