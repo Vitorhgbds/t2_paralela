@@ -10,9 +10,9 @@
 
 ################ Change these parameters according to your requisites
 # nodes and tasks
-#SBATCH --ntasks 1
-#SBATCH --nodes 1
-##SBATCH --ntasks-per-node=16
+#SBATCH --ntasks 32
+#SBATCH --nodes 2
+#SBATCH --ntasks-per-node=16
 
 # time 
 #SBATCH -t 10
@@ -77,9 +77,10 @@ echo ################
 
 ############# Commands...
 
-echo "Single node"
-mpirun ./seq > exitSeq.output
+echo "32 processos (bynode) 2 nodes"
+mpirun --map-by node -np 32 ./paral > exitParal_32_2.output
 echo
+
 ################
 
 echo Final Time is `date`

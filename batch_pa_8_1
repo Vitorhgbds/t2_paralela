@@ -10,7 +10,7 @@
 
 ################ Change these parameters according to your requisites
 # nodes and tasks
-#SBATCH --ntasks 1
+#SBATCH --ntasks 8
 #SBATCH --nodes 1
 ##SBATCH --ntasks-per-node=16
 
@@ -77,9 +77,10 @@ echo ################
 
 ############# Commands...
 
-echo "Single node"
-mpirun ./seq > exitSeq.output
+echo "8 processos Single node"
+mpirun -np 8 ./paral > exitParal_8_1.output
 echo
+
 ################
 
 echo Final Time is `date`
