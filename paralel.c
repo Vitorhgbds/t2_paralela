@@ -151,7 +151,7 @@ int main(int argc, char **argv)
         MPI_Barrier(MPI_COMM_WORLD);
         int size = 1;
         int elements_size;
-        while (true)
+        while (1)
         {
             printf("process: %d - of node: %s.. WAITING FOR MAIN NODE TO SEND ARRAY WITH DATA %d ...\n", pid, hostname, elements_size);
             MPI_Recv(&elements_size, 1, MPI_INT, 0, TAG_SEND_SIZE, MPI_COMM_WORLD, &status);
