@@ -66,6 +66,8 @@ int main(int argc, char **argv)
         MPI_Bcast(a, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         /* Preenche vetores */
         printf("process: %d - of node: %s.. SendedAlfas...\n", pid, hostname);
+        MPI_Barrier(MPI_COMM_WORLD);
+        printf("process: %d - of node: %s.. exiting barirer.\n", pid, hostname);
         for (int i = 1; i < process_count; i++)
         {
             int p = 0;
@@ -83,6 +85,8 @@ int main(int argc, char **argv)
         printf("process: %d - of node: %s.. exiting barirer.\n", pid, hostname);
         MPI_Bcast(process_alfa, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         printf("process: %d - of node: %s.. receiving alfas...\n", pid, hostname);
+        MPI_Barrier(MPI_COMM_WORLD);
+        printf("process: %d - of node: %s.. exiting barirer.\n", pid, hostname);
         MPI_Send(&pid, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
     }
     MPI_Finalize();
