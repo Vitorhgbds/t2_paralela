@@ -1,0 +1,106 @@
+#!/bin/bash
+################->  are comments
+################-> "#SBATCH" (only one "#") are Batch Script commands
+
+################ Verbose mode
+
+#SBATCH --export=ALL
+
+################
+
+################ Change these parameters according to your requisites
+# nodes and tasks
+#SBATCH --ntasks 32
+#SBATCH --nodes 2
+#SBATCH --ntasks-per-node=16
+
+# time 
+#SBATCH -t 10
+# time formats =  "minutes", "minutes:seconds", "hours:minutes:seconds", "days-hours", "days-hours:minutes" and "days-hours:minutes:seconds"
+
+# Exclusive (alloc all threads from each node) or shared (alloc only threads set by "-n" parameter)
+#SBATCH --exclusive
+##SBATCH --shared
+
+################ Please, change this e-mail address to yours
+
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=example@edu.pucrs.br
+
+################
+
+#SBATCH --no-requeue
+
+################ Output options
+
+# %%     The character "%".
+# %A     Job array's master job allocation number.
+# %a     Job array ID (index) number.
+# %J     jobid.stepid of the running job. (e.g. "128.0")
+# %j     jobid of the running job.
+# %N     short hostname. This will create a separate IO file per node.
+# %n     Node identifier relative to current job (e.g. "0" is the first node of the running job) This will create  a  separate IO file per node.
+# %s     stepid of the running job.
+# %t     task identifier (rank) relative to current job. This will create a separate IO file per task.
+# %u     User name.
+# %x     Job name.
+
+## different files for normal output end error output
+##SBATCH -o %x.%j.out -e %x.%j.err
+
+# or
+
+## all output in same file
+#SBATCH -o %x.%j.out
+
+################
+
+################ Please, change this directory to your working dir.
+
+#SBATCH -D /home/pp030__/mpi/hello
+
+################
+
+################
+echo Running on host `hostname`
+echo
+echo Initial Time is `date`
+echo
+echo Directory is `pwd`
+echo
+echo This jobs runs on the following nodes:
+echo $SLURM_JOB_NODELIST
+echo
+echo JOB_ID:
+echo $SLURM_JOBID
+echo ################
+
+############# Commands...
+
+echo "8 processos"
+mpirun -np 8 ./hello
+echo
+
+echo "16 processos"
+mpirun -np 16 ./hello
+echo
+
+echo "32 processos"
+mpirun -np 32 ./hello
+echo
+
+echo "8 processos (bynode)"
+mpirun --map-by node -np 8 ./hello
+echo
+
+echo "16 processos (bynode)"
+mpirun --map-by node -np 16 ./hello
+echo
+
+echo "32 processos (bynode)"
+mpirun --map-by node -np 32 ./hello
+echo
+
+################
+
+echo Final Time is `date`
