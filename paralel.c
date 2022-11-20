@@ -135,9 +135,10 @@ int main(int argc, char **argv)
         MPI_Barrier(MPI_COMM_WORLD);
         int size = 1;
         int elements_size;
-        MPI_Recv(&elements_size, 1, MPI_INT, 0, TAG_SEND_SIZE, MPI_COMM_WORLD);
+        MPI_Recv(&elements_size, 1, MPI_INT, 0, TAG_SEND_SIZE, MPI_COMM_WORLD, &status);
         double processArray[elements_size];
-        MPI_Recv(processArray, elements_size, MPI_DOUBLE, 0, TAG_SEND_ARR, MPI_COMM_WORLD) double answer[elements_size];
+        MPI_Recv(processArray, elements_size, MPI_DOUBLE, 0, TAG_SEND_ARR, MPI_COMM_WORLD, &status);
+       	double answer[elements_size];
         for (int i = 0; i < elements_size; i++)
         {
             answer[i] = polinomio(process_alfa, GRAU, processArray[i]);
