@@ -65,7 +65,6 @@ int main(int argc, char **argv)
         MPI_Bcast(a, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         /* Preenche vetores */
         printf("process: %d - of node: %s.. SendedAlfas...\n", pid, hostname);
-        }
     }
     else
     {
