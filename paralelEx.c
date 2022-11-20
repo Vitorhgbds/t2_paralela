@@ -54,53 +54,74 @@ int main(int argc, char **argv)
     MPI_Get_processor_name(hostname, &hostsize);
     MPI_Comm_rank(MPI_COMM_WORLD, &pid);
     MPI_Comm_size(MPI_COMM_WORLD, &process_count);
-    printf("Number of processesss: host: %d - %s\n", process_count, hostname);
     if (pid == 0)
     {
         /* Gera os coeficientes do polinomio */
 #pragma omp parallel for
         for (i = 0; i <= GRAU; ++i)
             a[i] = (i % 3 == 0) ? -1.0 : 1.0;
+        
+        printf("process: %d - of node: %s Stoping at barrier\n", pid, hostname);
         MPI_Barrier(MPI_COMM_WORLD);
-        printf("process: %d - of node: %s.. sending Alfas...\n", pid, hostname);
+        printf("process: %d - of node: %s.. Sending Alfas...\n", pid, hostname);
         MPI_Bcast(a, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         /* Preenche vetores */
-        printf("process: %d - of node: %s.. SendedAlfas...\n", pid, hostname);
-        MPI_Barrier(MPI_COMM_WORLD);
-        printf("process: %d - of node: %s.. exiting barirer.\n", pid, hostname);
-        for (int i = 1; i < process_count; i++)
+        printf("process: %d - of node: %s.. GENERATING VALIDATION...\n", pid, hostname);
+#pragma omp parallel for
+        for (i = 0; i < TAM_MAX; ++i)
         {
-            int p = 0;
-            printf("process: %d - waiting response og %d.. \n", pid, i);
-            MPI_Recv(&p, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &status);
-            printf("process: %d - Receive response of %d = %d.. \n", pid, i, p);
-            int arr[5] = {1,2,3,4,5};
-            printf("process: %d - sending ARR to %d.. \n", pid, i);
-            MPI_Send(arr, 5, MPI_INT, i, 1, MPI_COMM_WORLD);
+            x[i] = 0.1 + 0.1 * (double)i / TAM_MAX;
+            gabarito[i] = polinomio(a, GRAU, x[i]);
         }
-        
+
+        printf("process: %d - of node: %s Stoping at barrier\n", pid, hostname);
+        MPI_Barrier(MPI_COMM_WORLD);
+
+        printf("process: %d - of node: %s sleep 10 sec\n", pid, hostname);
+        sleep(10);
+        printf("process: %d - of node: %s awake\n", pid, hostname);
+
+        /* Gera tabela com tamanhos e tempos */
+        int init = 0;
+        int receivedInit = 0;
+            printf("START NEXT")
+            /* Calcula */
+            int process_pid = 1;
+
+            for (int pid = 1; pid < process_count; i++)
+            {
+                int fim = pid * TAM_MAX / (process_count - 1);
+                int tam = fim - init;
+                double arrToSend[tam];
+                for (int i = 0; i < tam; i++)
+                {
+                    arrToSend[i] = x[i + init];
+                }
+
+                printf("process: %d - of node: %s.. sending size of: %d to worker: %d...\n", pid, hostname, tam, pid);
+                MPI_Send(&tam, 1, MPI_INT, pid, TAG_SEND_SIZE, MPI_COMM_WORLD);
+                printf("process: %d - of node: %s.. Senfing array to worker: %d ...\n", pid, hostname, pid);
+                MPI_Send(arrToSend, tam, MPI_DOUBLE, pid, TAG_SEND_ARR, MPI_COMM_WORLD);
+                init = fim;
+            }
     }
     else
     {
         double process_alfa[GRAU + 1];
-        printf("Starting process: %d - of node: %s.. waiting on barirer.\n", pid, hostname);
+        printf("Starting process: %d - of node: %s.. waiting on barrirer.\n", pid, hostname);
         MPI_Barrier(MPI_COMM_WORLD);
-        printf("process: %d - of node: %s.. exiting barirer.\n", pid, hostname);
         MPI_Bcast(process_alfa, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         printf("process: %d - of node: %s.. receiving alfas...\n", pid, hostname);
+
         MPI_Barrier(MPI_COMM_WORLD);
-        printf("process: %d - of node: %s.. exiting barirer.\n", pid, hostname);
-        MPI_Send(&pid, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-        int arr_node[5];
-        MPI_Recv(arr_node, 5, MPI_INT, 0, 1, MPI_COMM_WORLD, &status);
-        char charArr[6];
-        charArr[5] = '\0';
-        for (int i = 0; i < 5; i++)
-        {
-            charArr[i] = arr_node[i] + '0';
-        }
-        
-        printf("process: %d - of node: %s.. Received Array: %s\n", pid, hostname, charArr);
+        int size = 1;
+        int elements_size;
+        printf("process: %d - of node: %s.. WAITING FOR MAIN NODE TO SEND ARRAY WITH DATA %d ...\n", pid, hostname, elements_size);
+        MPI_Recv(&elements_size, 1, MPI_INT, 0, TAG_SEND_SIZE, MPI_COMM_WORLD, &status);
+        printf("process: %d - of node: %s.. receiver array size of: %d ...\n", pid, hostname, elements_size);
+        double processArray[elements_size];
+        MPI_Recv(processArray, elements_size, MPI_DOUBLE, 0, TAG_SEND_ARR, MPI_COMM_WORLD, &status);
+        printf("process: %d - of node: %s.. receiver array ...\n", pid, hostname);
     }
     MPI_Finalize();
     return 0;
