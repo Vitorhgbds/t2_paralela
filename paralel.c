@@ -122,7 +122,7 @@ int main(int argc, char **argv)
                 int fim = pid * size / (process_count - 1);
                 int tam = fim - receivedInit;
                 printf("process: root.. tam: %d...\n", tam);
-                int recv[tam];
+                double recv[tam];
                 printf("process: root.. Waiting response of worker %d...\n", pid);
                 MPI_Recv(recv, tam, MPI_DOUBLE, pid, TAG_SEND_ARR, MPI_COMM_WORLD, &status);
                 printf("process: root - RECEIVING CHUNK OF SIZE %d, startIndex: %d, endIndex: %d for pid: %d -> sizeof recv %d...\n", tam, receivedInit, fim, pid, (int)(sizeof(recv)/sizeof(recv[0])));
