@@ -73,6 +73,13 @@ int main(int argc, char **argv)
             x[i] = 0.1 + 0.1 * (double)i / TAM_MAX;
             gabarito[i] = polinomio(a, GRAU, x[i]);
         }
+        printf("GAB: {\n")
+        for (int i = 0; i < TAM_MAX;; i++)
+        {
+            printf("%f, ", gabarito[i]);
+        }
+        printf("\n}\n\n");
+        
 
         printf("process: root Stoping at barrier\n");
         MPI_Barrier(MPI_COMM_WORLD);
@@ -95,7 +102,7 @@ int main(int argc, char **argv)
                 int fim = pid * size / (process_count - 1);
                 int tam = fim - init;
                 double arrToSend[tam];
-                printf("process: root - MAKING CHUNK OF SIZE %d, startIndex: %d, endIndex: %d for pid: %d...\n", tam, init, fim, pid);
+                printf("process: root - MAKING CHUNK OF SIZE %d, startIndex: %d, endIndex: < %d for pid: %d...\n", tam, init, fim, pid);
                 for (int i = 0; i < tam; i++)
                 {
                     arrToSend[i] = x[i + init];
@@ -125,13 +132,20 @@ int main(int argc, char **argv)
 
             tempo += MPI_Wtime();
             /* Verificacao */
+
+            printf("process: root - sleep 10 sec\n");
+            sleep(10);
+            printf("Process: Root validation: {\n")
             for (i = 0; i < size; ++i)
             {
+                printf("(%f - %f), ", y[i], gabarito[i]);
                 if (y[i] != gabarito[i])
                 {
-                    erro("verificacao falhou!");
+                    printf("verificacao falhou!\n");
                 }
             }
+            printf("\n}\n\n");
+            
             /* Mostra tempo */
             printf("%d %lf\n", size, tempo);
         }
@@ -155,8 +169,9 @@ int main(int argc, char **argv)
         int elements_size;
         while (1)
         {
-            printf("worker: %d - of node: %s.. WAITING FOR MAIN NODE TO SEND ARRAY WITH DATA %d ...\n", MAIN_PID, hostname, elements_size);
+            printf("worker: %d - of node: %s.. WAITING FOR MAIN NODE TO SEND ARRAY SIZE ...\n", MAIN_PID, hostname);
             MPI_Recv(&elements_size, 1, MPI_INT, 0, TAG_SEND_SIZE, MPI_COMM_WORLD, &status);
+            printf("worker: %d - of node: %s.. Received size of: %d ...\n", MAIN_PID, hostname, elements_size);
             if (elements_size == -1)
             {
                 printf("worker: %d - of node: %s.. received -1. Will Stop ...\n", MAIN_PID, hostname);
@@ -167,7 +182,7 @@ int main(int argc, char **argv)
             double processArray[elements_size];
             MPI_Recv(processArray, elements_size, MPI_DOUBLE, 0, TAG_SEND_ARR, MPI_COMM_WORLD, &status);
             printf("worker: %d - of node: %s.. receiver array ...\n", MAIN_PID, hostname);
-            
+
             double answer[elements_size];
             for (int i = 0; i < elements_size; i++)
             {
