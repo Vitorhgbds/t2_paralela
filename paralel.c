@@ -73,8 +73,8 @@ int main(int argc, char **argv)
             x[i] = 0.1 + 0.1 * (double)i / TAM_MAX;
             gabarito[i] = polinomio(a, GRAU, x[i]);
         }
-        printf("GAB: {\n")
-        for (int i = 0; i < TAM_MAX;; i++)
+        printf("GAB: {\n");
+        for (int i = 0; i < TAM_MAX; i++)
         {
             printf("%f, ", gabarito[i]);
         }
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
         printf("process: root Stoping at barrier\n");
         MPI_Barrier(MPI_COMM_WORLD);
 
-        printf("process: root - sleep 10 sec\n");
+        printf("process: root - sleep 10 sec\n");%d
         sleep(10);
         printf("process: root - awake\n");
 
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
 
             printf("process: root - sleep 10 sec\n");
             sleep(10);
-            printf("Process: Root validation: {\n")
+            printf("Process: Root validation: {\n");
             for (i = 0; i < size; ++i)
             {
                 printf("(%f - %f), ", y[i], gabarito[i]);
