@@ -1,0 +1,15 @@
+Running on host grad01
+
+Initial Time is Tue 22 Nov 2022 01:21:19 AM -03
+
+Directory is /home/pp03011/t2/t2_paralela
+
+This jobs runs on the following nodes:
+grad[01-02]
+
+JOB_ID:
+7375
+
+32 processos (bynode) 2 nodes
+
+Final Time is Tue 22 Nov 2022 01:21:45 AM -03
