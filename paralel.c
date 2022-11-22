@@ -101,7 +101,10 @@ int main(int argc, char **argv)
             for (int pid = 1; pid < process_count; pid++)
             {
                 int fim = pid * size / (process_count - 1);
+                printf("process: root - calculo: %d * %d / (%d) == %d", pid, size, (process_count - 1), fim);
                 int tam = fim - init;
+                printf("process: root - calculo: %d - %d == %d", fim, init, tam);
+                
                 double arrToSend[tam];
                 printf("process: root - MAKING CHUNK OF SIZE %d, startIndex: %d, endIndex: < %d for pid: %d...\n", tam, init, fim, pid);
                 for (int i = 0; i < tam; i++)
@@ -119,9 +122,12 @@ int main(int argc, char **argv)
 
             for (int pid = 1; pid < process_count; pid++)
             {
+
                 int fim = pid * size / (process_count - 1);
+                printf("process: root - calculo: %d * %d / (%d) == %d", pid, size, (process_count - 1), fim);
                 int tam = fim - receivedInit;
-                printf("process: root.. tam: %d...\n", tam);
+                printf("process: root - calculo: %d - %d == %d", fim, receivedInit, tam);
+
                 double recv[tam];
                 printf("process: root.. Waiting response of worker %d...\n", pid);
                 MPI_Recv(recv, tam, MPI_DOUBLE, pid, TAG_SEND_ARR, MPI_COMM_WORLD, &status);
