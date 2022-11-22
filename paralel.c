@@ -107,6 +107,7 @@ int main(int argc, char **argv)
                 for (int i = 0; i < tam; i++)
                 {
                     arrToSend[i] = x[i + init];
+                    printf("process: root - index: %d, arrToSend[%d] = %f - x[%d + %d ==%d] - %f to worker: %d...\n", i,i, arrToSend[i], i, init, i + init, x[i + init]);
                 }
 
                 printf("process: root - sending size of: %d to worker: %d...\n", tam, pid);
@@ -120,10 +121,11 @@ int main(int argc, char **argv)
             {
                 int fim = pid * size / (process_count - 1);
                 int tam = fim - receivedInit;
+                printf("process: root.. tam: %d...\n", tam);
                 int recv[tam];
                 printf("process: root.. Waiting response of worker %d...\n", pid);
                 MPI_Recv(recv, tam, MPI_DOUBLE, pid, TAG_SEND_ARR, MPI_COMM_WORLD, &status);
-                printf("process: root - RECEIVING CHUNK OF SIZE %d, startIndex: %d, endIndex: %d for pid: %d -> sizeof recv %ld...\n", tam, receivedInit, fim, pid, sizeof(recv));
+                printf("process: root - RECEIVING CHUNK OF SIZE %d, startIndex: %d, endIndex: %d for pid: %d -> sizeof recv %d...\n", tam, receivedInit, fim, pid, (int)sizeof(recv));
                 for (int i = 0; i < tam; i++)
                 {
                     y[i + receivedInit] = recv[i];
@@ -187,7 +189,9 @@ int main(int argc, char **argv)
             double answer[elements_size];
             for (int i = 0; i < elements_size; i++)
             {
+                printf("worker: %d - of node: %s.. WIll Calculate: %f...\n", MAIN_PID, hostname, processArray[i]);
                 answer[i] = polinomio(process_alfa, GRAU, processArray[i]);
+                printf("worker: %d - of node: %s.. Result: %f...\n", MAIN_PID, hostname, answer[i]);
             }
             printf("worker: %d - of node: %s.. sending array with answers...\n", MAIN_PID, hostname);
             MPI_Send(answer, elements_size, MPI_DOUBLE, 0, TAG_SEND_ARR, MPI_COMM_WORLD);
