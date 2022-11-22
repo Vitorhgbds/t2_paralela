@@ -144,8 +144,10 @@ int main(int argc, char **argv)
 
            // printf("process: root - sleep 10 sec\n");
             //sleep(10);
+            printf("Process: Root validation: {\n");
             for (i = 0; i < size; ++i)
             {
+                printf("(%f - %f), \n", y[i], gabarito[i]);
                 if (y[i] != gabarito[i])
                 {
                     erro("verificacao falhou!\n");
