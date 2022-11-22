@@ -7,11 +7,11 @@
 #include "mpi.h"
 
 /* CONTANTES */
-#define GRAU 10
+#define GRAU 400
 #define TAG 1
-#define TAM_INI 10
-#define TAM_INC 10
-#define TAM_MAX 100
+#define TAM_INI 1000000
+#define TAM_INC 1000000
+#define TAM_MAX 10000000
 
 /* VARIAVEIS GLOBAIS */
 double x[TAM_MAX], y[TAM_MAX], gabarito[TAM_MAX];
@@ -68,12 +68,12 @@ int main(int argc, char **argv)
             x[i] = 0.1 + 0.1 * (double)i / TAM_MAX;
             gabarito[i] = polinomio(a, GRAU, x[i]);
         }
-        printf("GAB: {\n");
+        //printf("GAB: {\n");
         for (int i = 0; i < TAM_MAX; i++)
         {
-            printf("%f, ", gabarito[i]);
+          //  printf("%f, ", gabarito[i]);
         }
-        printf("\n}\n\n");
+        //printf("\n}\n\n");
         
 
         printf("process: root Stoping at barrier\n");
@@ -148,7 +148,7 @@ int main(int argc, char **argv)
             printf("Process: Root validation: {\n");
             for (i = 0; i < size; ++i)
             {
-                printf("(%f - %f), \n", y[i], gabarito[i]);
+                //printf("(%f - %f) -> %d, \n", y[i], gabarito[i], );
                 if (y[i] != gabarito[i])
                 {
                     printf("(%f - %f) - FALHOU , \n", y[i], gabarito[i]);
@@ -186,9 +186,9 @@ int main(int argc, char **argv)
 
             for (int i = 0; i < tam; i++)
             {
-                printf("worker: %d - of node: %s.. WIll Calculate: %f...\n", CURRENT_PID, hostname, x[i]);
+                //printf("worker: %d - of node: %s.. WIll Calculate: %f...\n", CURRENT_PID, hostname, x[i]);
                 y[i] = polinomio(a, GRAU, x[i]);
-                printf("worker: %d - of node: %s.. Result: %f...\n", CURRENT_PID, hostname, y[i]);
+                //printf("worker: %d - of node: %s.. Result: %f...\n", CURRENT_PID, hostname, y[i]);
             }
             printf("worker: %d - of node: %s.. sending array with answers...\n", CURRENT_PID, hostname);
             MPI_Send(&tam, 1, MPI_INT, 0, TAG, MPI_COMM_WORLD);
