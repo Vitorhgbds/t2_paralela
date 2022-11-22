@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 
             for (int pid = 1; pid < process_count; pid++)
             {
-                int fim = (pid * size / (process_count - 1));// + (size - TAM_INI);
+                int fim = pid * size / (process_count - 1);// + (size - TAM_INI);
                 //printf("process: root - calculo: %d * %d / (%d) == %d", pid, size, (process_count - 1), fim);
                 int tam = fim - init;
                // printf("process: root - calculo: %d - %d == %d", fim, init, tam);
@@ -177,7 +177,6 @@ int main(int argc, char **argv)
         printf("worker: %d - of node: %s.. receiving alfas...\n", CURRENT_PID, hostname);
 
         MPI_Barrier(MPI_COMM_WORLD);
-        int size = 1;
         int tam;
         int init;
         while (1)
