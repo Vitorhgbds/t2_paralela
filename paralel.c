@@ -107,7 +107,7 @@ int main(int argc, char **argv)
                 for (int i = 0; i < tam; i++)
                 {
                     arrToSend[i] = x[i + init];
-                    printf("process: root - index: %d, arrToSend[%d] = %f - x[%d + %d ==%d] - %f to worker: %d...\n", i,i, arrToSend[i], i, init, i + init, x[i + init]);
+                    printf("process: root - index: %d, arrToSend[%d] = %f - x[%d + %d ==%d] - %f to worker: %d...\n", i,i, arrToSend[i], i, init, i + init, x[i + init], pid);
                 }
 
                 printf("process: root - sending size of: %d to worker: %d...\n", tam, pid);
