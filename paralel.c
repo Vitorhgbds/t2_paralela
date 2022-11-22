@@ -86,13 +86,12 @@ int main(int argc, char **argv)
         //printf("process: root - awake\n");
 
         /* Gera tabela com tamanhos e tempos */
-        int init = 0;
-        int receivedInit = 0;
         for (size = TAM_INI; size <= TAM_MAX; size += TAM_INC)
         {
             /* Calcula */
             tempo = -MPI_Wtime();
 
+            int init = 0;
             for (int pid = 1; pid < process_count; ++pid)
             {
                 int fim = pid * size / (process_count - 1);// + (size - TAM_INI);
