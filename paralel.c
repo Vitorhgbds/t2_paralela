@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 
             for (int pid = 1; pid < process_count; pid++)
             {
-                int fim = (pid * size / (process_count - 1))// + (size - TAM_INI);
+                int fim = (pid * size / (process_count - 1));// + (size - TAM_INI);
                 printf("process: root - calculo: %d * %d / (%d) == %d", pid, size, (process_count - 1), fim);
                 int tam = fim - init;
                 printf("process: root - calculo: %d - %d == %d", fim, init, tam);
@@ -135,7 +135,6 @@ int main(int argc, char **argv)
                 MPI_Recv(&recv_tam, 1, MPI_INT, pid, TAG_SEND_SIZE, MPI_COMM_WORLD, &status);
                 MPI_Recv(&recv_init, 1, MPI_INT, pid, TAG_SEND_SIZE, MPI_COMM_WORLD, &status);
                 MPI_Recv(&y[recv_init], recv_tam, MPI_DOUBLE, pid, TAG_SEND_ARR, MPI_COMM_WORLD, &status);
-                printf("process: root - RECEIVING CHUNK OF SIZE %d, startIndex: %d, endIndex: %d for pid: %d -> sizeof recv %d...\n", tam, receivedInit, fim, pid, (int)(sizeof(recv)/sizeof(recv[0])));
                 //for (int i = 0; i < tam; i++)
                // {
                //     y[i + receivedInit] = recv[i];
@@ -199,9 +198,9 @@ int main(int argc, char **argv)
 
             for (int i = 0; i < tam; i++)
             {
-                printf("worker: %d - of node: %s.. WIll Calculate: %f...\n", CURRENT_PID, hostname, processArray[i]);
+                printf("worker: %d - of node: %s.. WIll Calculate: %f...\n", CURRENT_PID, hostname, x[i]);
                 y[i] = polinomio(process_alfa, GRAU, x[i]);
-                printf("worker: %d - of node: %s.. Result: %f...\n", CURRENT_PID, hostname, answer[i]);
+                printf("worker: %d - of node: %s.. Result: %f...\n", CURRENT_PID, hostname, y[i]);
             }
             printf("worker: %d - of node: %s.. sending array with answers...\n", CURRENT_PID, hostname);
             MPI_Send(&tam, 1, MPI_INT, 0, TAG_SEND_SIZE, MPI_COMM_WORLD);
