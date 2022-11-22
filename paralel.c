@@ -93,7 +93,7 @@ int main(int argc, char **argv)
             /* Calcula */
             tempo = -MPI_Wtime();
 
-            for (int pid = 1; pid < process_count; pid++)
+            for (int pid = 1; pid < process_count; ++pid)
             {
                 int fim = pid * size / (process_count - 1);// + (size - TAM_INI);
                 printf("process: root - calculo: %d * %d / (%d) == %d\n", pid, size, (process_count - 1), fim);
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
                 init = fim;
             }
 
-            for (int pid = 1; pid < process_count; pid++)
+            for (int pid = 1; pid < process_count; ++pid)
             {
 
                 /*int fim = pid * size / (process_count - 1)// + (size - TAM_INI);
@@ -130,6 +130,7 @@ int main(int argc, char **argv)
                 printf("process: root.. Waiting response of worker %d...\n", pid);
                 MPI_Recv(&recv_tam, 1, MPI_INT, pid, TAG, MPI_COMM_WORLD, &status);
                 MPI_Recv(&recv_init, 1, MPI_INT, pid, TAG, MPI_COMM_WORLD, &status);
+                printf("process: root.. will receive from pid: %d - from Init: %d to %d ...\n", pid, recv_init, recv_tam);
                 MPI_Recv(&y[recv_init], recv_tam, MPI_DOUBLE, pid, TAG, MPI_COMM_WORLD, &status);
                 //for (int i = 0; i < tam; i++)
                // {
@@ -150,6 +151,7 @@ int main(int argc, char **argv)
                 printf("(%f - %f), \n", y[i], gabarito[i]);
                 if (y[i] != gabarito[i])
                 {
+                    printf("(%f - %f) - FALHOU , \n", y[i], gabarito[i]);
                     erro("verificacao falhou!\n");
                 }
             }
