@@ -60,10 +60,6 @@ int main(int argc, char **argv)
         for (i = 0; i <= GRAU; ++i)
             a[i] = (i % 3 == 0) ? -1.0 : 1.0;
 
-        printf("process: root -  Stoping at barrier\n");
-        MPI_Barrier(MPI_COMM_WORLD);
-        printf("process: root - Sending Alfas...\n");
-        MPI_Bcast(a, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         /* Preenche vetores */
         printf("process: root - GENERATING VALIDATION...\n");
 #pragma omp parallel for
@@ -82,7 +78,8 @@ int main(int argc, char **argv)
 
         printf("process: root Stoping at barrier\n");
         MPI_Barrier(MPI_COMM_WORLD);
-        printf("process: root leaving barrier\n");
+        printf("process: root - Sending Alfas...\n");
+        MPI_Bcast(&a, GRAU, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
         //printf("process: root - sleep 10 sec FIRST\n");
         //sleep(10);
@@ -170,13 +167,10 @@ int main(int argc, char **argv)
     }
     else
     {
-        double process_alfa[GRAU + 1];
         printf("Starting worker: %d - of node: %s.. waiting on barrirer.\n", CURRENT_PID, hostname);
         MPI_Barrier(MPI_COMM_WORLD);
-        MPI_Bcast(process_alfa, GRAU + 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Bcast(&a, GRAU, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         printf("worker: %d - of node: %s.. receiving alfas...\n", CURRENT_PID, hostname);
-
-        MPI_Barrier(MPI_COMM_WORLD);
         int tam;
         int init;
         while (1)
@@ -197,7 +191,7 @@ int main(int argc, char **argv)
             for (int i = 0; i < tam; i++)
             {
                 printf("worker: %d - of node: %s.. WIll Calculate: %f...\n", CURRENT_PID, hostname, x[i]);
-                y[i] = polinomio(process_alfa, GRAU, x[i]);
+                y[i] = polinomio(a, GRAU, x[i]);
                 printf("worker: %d - of node: %s.. Result: %f...\n", CURRENT_PID, hostname, y[i]);
             }
             printf("worker: %d - of node: %s.. sending array with answers...\n", CURRENT_PID, hostname);
