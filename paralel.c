@@ -174,9 +174,10 @@ int main(int argc, char **argv)
             int stopSign = -1;
             MPI_Send(&stopSign, 1, MPI_INT, pid, TAG, MPI_COMM_WORLD);
         }
+            printf("\n\n\ntamanho,tempo\n",);
         for (int i = 0; i < 10; i++)
         {
-            printf("%d - %lf\n", sizes_with_time[i].size, sizes_with_time[i].time);
+            printf("%d,%lf\n", sizes_with_time[i].size, sizes_with_time[i].time);
         }
     }
     else
