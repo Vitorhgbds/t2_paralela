@@ -84,7 +84,7 @@ int main(int argc, char **argv)
         printf("process: root Stoping at barrier\n");
         MPI_Barrier(MPI_COMM_WORLD);
 
-        printf("process: root - sleep 10 sec\n");:
+        printf("process: root - sleep 10 sec\n");
         sleep(10);
         printf("process: root - awake\n");
 
