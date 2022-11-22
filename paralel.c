@@ -96,9 +96,9 @@ int main(int argc, char **argv)
             for (int pid = 1; pid < process_count; pid++)
             {
                 int fim = pid * size / (process_count - 1);// + (size - TAM_INI);
-                printf("process: root - calculo: %d * %d / (%d) == %d", pid, size, (process_count - 1), fim);
+                printf("process: root - calculo: %d * %d / (%d) == %d\n", pid, size, (process_count - 1), fim);
                 int tam = fim - init;
-                printf("process: root - calculo: %d - %d == %d", fim, init, tam);
+                printf("process: root - calculo: %d - %d == %d\n", fim, init, tam);
                 
                 //double arrToSend[tam];
                 //printf("process: root - MAKING CHUNK OF SIZE %d, startIndex: %d, endIndex: < %d for pid: %d...\n", tam, init, fim, pid);
@@ -144,10 +144,8 @@ int main(int argc, char **argv)
 
            // printf("process: root - sleep 10 sec\n");
             //sleep(10);
-            printf("Process: Root validation: {\n");
             for (i = 0; i < size; ++i)
             {
-                printf("(%f - %f), ", y[i], gabarito[i]);
                 if (y[i] != gabarito[i])
                 {
                     erro("verificacao falhou!\n");
@@ -158,7 +156,7 @@ int main(int argc, char **argv)
             /* Mostra tempo */
             printf("%d %lf\n", size, tempo);
         }
-        printf("FINISH EXECUTING EVERTIHING on main, will stop workers");
+        printf("FINISH EXECUTING EVERTIHING on main, will stop workers\n");
         for (int pid = 1; pid < process_count; pid++)
         {
             int stopSign = -1;
@@ -167,26 +165,20 @@ int main(int argc, char **argv)
     }
     else
     {
-        printf("Starting worker: %d - of node: %s.. waiting on barrirer.\n", CURRENT_PID, hostname);
         MPI_Barrier(MPI_COMM_WORLD);
         MPI_Bcast(&a, GRAU, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-        printf("worker: %d - of node: %s.. receiving alfas...\n", CURRENT_PID, hostname);
         int tam;
         int init;
         while (1)
         {
-            printf("worker: %d - of node: %s.. WAITING FOR MAIN NODE TO SEND ARRAY SIZE ...\n", CURRENT_PID, hostname);
             MPI_Recv(&tam, 1, MPI_INT, 0, TAG, MPI_COMM_WORLD, &status);
-            printf("worker: %d - of node: %s.. Received size of: %d ...\n", CURRENT_PID, hostname, tam);
             if (tam == -1)
             {
                 printf("worker: %d - of node: %s.. received -1. Will Stop ...\n", CURRENT_PID, hostname);
                 break;
             }
             MPI_Recv(&init, 1, MPI_INT, 0, TAG, MPI_COMM_WORLD, &status);
-            printf("worker: %d - of node: %s.. waiting for receiving array of size: %d ...\n", CURRENT_PID, hostname, tam);
             MPI_Recv(&x[0], tam, MPI_DOUBLE, 0, TAG, MPI_COMM_WORLD, &status);
-            printf("worker: %d - of node: %s.. receiver array ...\n", CURRENT_PID, hostname);
 
             for (int i = 0; i < tam; i++)
             {
