@@ -96,9 +96,9 @@ int main(int argc, char **argv)
             for (int pid = 1; pid < process_count; pid++)
             {
                 int fim = pid * size / (process_count - 1);// + (size - TAM_INI);
-                //printf("process: root - calculo: %d * %d / (%d) == %d", pid, size, (process_count - 1), fim);
+                printf("process: root - calculo: %d * %d / (%d) == %d", pid, size, (process_count - 1), fim);
                 int tam = fim - init;
-               // printf("process: root - calculo: %d - %d == %d", fim, init, tam);
+                printf("process: root - calculo: %d - %d == %d", fim, init, tam);
                 
                 //double arrToSend[tam];
                 //printf("process: root - MAKING CHUNK OF SIZE %d, startIndex: %d, endIndex: < %d for pid: %d...\n", tam, init, fim, pid);
@@ -147,10 +147,10 @@ int main(int argc, char **argv)
             printf("Process: Root validation: {\n");
             for (i = 0; i < size; ++i)
             {
-            //    printf("(%f - %f), ", y[i], gabarito[i]);
+                printf("(%f - %f), ", y[i], gabarito[i]);
                 if (y[i] != gabarito[i])
                 {
-                    printf("verificacao falhou!\n");
+                    erro("verificacao falhou!\n");
                 }
             }
            // printf("\n}\n\n");
